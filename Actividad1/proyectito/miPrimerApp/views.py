@@ -3,39 +3,20 @@ from .models import *
 
 # Create your views here.
 
-def getMismoApellido(list):
-
-    list = list.order_by('apellidos')
-    listMismos = []
-    for i in range(0, len(list)):
-        if i < len(list)-1 and list[i].apellidos == list[i+1].apellidos:
-           listMismos.append(list[i])
-        elif i != 0 and list[i].apellidos == list[i-1].apellidos:
-            listMismos.append(list[i])
-    return listMismos
-
-def getMismaEdad(list):
-    list = list.order_by('edad')
-    listMismos = []
-    for i in range(0, len(list)):
-        if i < len(list)-1 and list[i].edad == list[i+1].edad:
-            listMismos.append(list[i])
-        elif i != 0 and list[i].edad == list[i-1].edad:
-            listMismos.append(list[i])  
-    return listMismos  
-
 def index(request):
 
-    #Get cuando se sabe que hay un dato único
-    #Filter regresa una lista de todos los datos de la consulta
     grupo1 = Estudiante.objects.filter(grupo = 1)
     grupo4 = Estudiante.objects.filter(grupo = 4)
-    grupo3 = Estudiante.objects.filter(grupo = 3)
     estudiantes = Estudiante.objects.all()
-    mismoApellido = getMismoApellido(estudiantes)
-    mismaEdad = getMismaEdad(estudiantes)   
-    grupo3MismaEdad = getMismaEdad(grupo3)
     
+    # Estudiantes con el mismo apellido: Mendoza
+    apMendoza = Estudiante.objects.filter(apellidos = 'Mendoza')
 
-    return render(request, 'index.html', {'grupo1':grupo1, 'grupo4':grupo4,'inOrder':grupo3, 'mismoApellido':mismoApellido, 'mismaEdad':mismaEdad, 'grupo3MismaEdad':grupo3MismaEdad, 'estudiantes': estudiantes})
+    # Estudiantes con la misma edad: 22
+    edad22 = Estudiante.objects.filter(edad = 22)
+
+    # Estudiantes del grupo 3 con la misma edad: 22
+    grupo3Edad22 = Estudiante.objects.filter(grupo = 3, edad = 22)
+
+    return render(request, 'index.html', {'grupo1':grupo1, 'grupo4':grupo4, 'mismoApellido':apMendoza, 'mismaEdad':edad22, 'grupo3MismaEdad':grupo3Edad22, 'estudiantes': estudiantes})
     
